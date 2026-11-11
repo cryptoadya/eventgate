@@ -1,0 +1,36 @@
+schema_version: 1
+adapter: payment-v1
+mode: release
+
+baseline:
+  image: ${EVENTGATE_BASELINE_IMAGE}
+candidate:
+  image: ${EVENTGATE_STABLE_IMAGE}
+
+infrastructure:
+  kafka_image: ${EVENTGATE_KAFKA_IMAGE}
+  postgres_image: ${EVENTGATE_POSTGRES_IMAGE}
+
+kafka:
+  input_topic: payments.requested
+  output_topic: payments.completed
+  partitions: 1
+
+scenarios:
+  - normal
+  - duplicate_delivery
+  - consumer_restart
+  - crash_after_db_commit
+  - crash_after_publish_ack
+
+timeouts:
+  startup_seconds: 60
+  progress_seconds: 30
+  control_seconds: 10
+  cleanup_seconds: 30
+
+comparison:
+  allowed_extra_output_fields: []
+
+artifacts:
+  directory: ../results

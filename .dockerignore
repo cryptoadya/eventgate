@@ -1,0 +1,9 @@
+**
+!pyproject.toml
+!README.md
+!LICENSE
+!requirements-runtime.lock
+!src/
+!src/**
+**/__pycache__/
+**/*.egg-info/

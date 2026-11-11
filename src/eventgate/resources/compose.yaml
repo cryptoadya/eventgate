@@ -1,0 +1,114 @@
+x-ownership: &ownership
+  eventgate.run_id: "${EG_RUN_ID:?}"
+  eventgate.environment_id: "${EG_ENVIRONMENT_ID:?}"
+
+x-app: &app
+  image: "${EG_APP_IMAGE:?}"
+  pull_policy: never
+  restart: "no"
+  init: true
+  labels: *ownership
+  environment: &app-environment
+    DATABASE_URL: "${EG_APP_DSN:?}"
+    KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    INPUT_TOPIC: "${EG_INPUT_TOPIC:?}"
+    OUTPUT_TOPIC: "${EG_OUTPUT_TOPIC:?}"
+    CONSUMER_GROUP_ID: "${EG_CONSUMER_GROUP:?}"
+    EVENTGATE_OPERATION_TIMEOUT_SECONDS: "${EG_OPERATION_SECONDS:?}"
+
+x-control-environment: &control-environment
+  <<: *app-environment
+  EVENTGATE_TEST_MODE: "1"
+  EVENTGATE_CONTROL_DIR: /var/lib/eventgate-control
+  EVENTGATE_RUN_ID: "${EG_RUN_ID:?}"
+  EVENTGATE_SCENARIO_ID: "${EG_SCENARIO_ID:?}"
+
+services:
+  kafka:
+    image: "${EG_KAFKA_IMAGE:?}"
+    pull_policy: never
+    restart: "no"
+    labels: *ownership
+    ports:
+      - "127.0.0.1:${EG_KAFKA_PORT:?}:29092"
+    environment:
+      CLUSTER_ID: "${EG_CLUSTER_ID:?}"
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:29092,CONTROLLER://:29093
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:9092,EXTERNAL://127.0.0.1:${EG_KAFKA_PORT:?}"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_NUM_PARTITIONS: "1"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_MIN_INSYNC_REPLICAS: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+      KAFKA_LOG_CLEANUP_POLICY: delete
+      KAFKA_LOG_RETENTION_MS: "-1"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+      - kafka-secrets:/etc/kafka/secrets
+      - kafka-config:/mnt/shared/config
+
+  postgres:
+    image: "${EG_POSTGRES_IMAGE:?}"
+    pull_policy: never
+    restart: "no"
+    labels: *ownership
+    ports:
+      - "127.0.0.1:${EG_POSTGRES_PORT:?}:5432"
+    environment:
+      POSTGRES_DB: eventgate
+      POSTGRES_USER: "${EG_POSTGRES_USER:?}"
+      POSTGRES_PASSWORD: "${EG_POSTGRES_PASSWORD:?}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  init-db:
+    <<: *app
+    command: ["init-db"]
+
+  consumer:
+    <<: *app
+    command: ["consumer"]
+    environment: *control-environment
+    ports:
+      - "127.0.0.1::8080"
+    volumes:
+      - consumer-control:/var/lib/eventgate-control
+
+  publisher:
+    <<: *app
+    command: ["publisher"]
+    environment: *control-environment
+    ports:
+      - "127.0.0.1::8080"
+    volumes:
+      - publisher-control:/var/lib/eventgate-control
+
+networks:
+  default:
+    labels: *ownership
+
+volumes:
+  kafka-data:
+    labels: *ownership
+  kafka-secrets:
+    labels: *ownership
+  kafka-config:
+    labels: *ownership
+  postgres-data:
+    labels: *ownership
+  consumer-control:
+    labels: *ownership
+  publisher-control:
+    labels: *ownership

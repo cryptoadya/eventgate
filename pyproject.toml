@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eventgate"
+version = "0.1.0"
+description = "Regression checks for event-driven payment handlers"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = [
+    "confluent-kafka>=2.8,<3",
+    "jinja2>=3.1,<4",
+    "psycopg[binary]>=3.2,<4",
+    "pydantic>=2.11,<3",
+    "pyyaml>=6,<7",
+    "sqlalchemy>=2.0,<3",
+    "typer>=0.16,<1",
+]
+
+[project.optional-dependencies]
+dev = ["build>=1,<2", "mypy>=1,<2", "pytest>=8,<10", "ruff>=0.11,<1", "setuptools==80.9.0", "types-pyyaml>=6,<7"]
+
+[project.scripts]
+eventgate = "eventgate.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+eventgate = ["resources/*.yaml", "templates/*.j2"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-config --strict-markers --import-mode=importlib"

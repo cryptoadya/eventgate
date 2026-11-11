@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EventGate report — {{ run.verdict }}</title>
+  <style>
+    :root { color-scheme: light; font: 16px/1.55 system-ui, sans-serif; color: #172738; background: #eef3f6; }
+    body { max-width: 74rem; margin: 2rem auto; padding: 0 1rem; }
+    header, section { background: white; border: 1px solid #cbd8e2; border-radius: .55rem; margin: 1rem 0; padding: 1.3rem; }
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { margin: 0 0 .55rem; }
+    .verdict { display: inline-block; padding: .1rem .5rem; border-radius: .35rem; font-weight: 700; background: #e8eef3; }
+    .PASS { color: #14532d; background: #dcfce7; } .FAIL, .ERROR { color: #9a2221; background: #fee2e2; }
+    .notice { background: #fff5d8; border-left: .25rem solid #976318; padding: .6rem .8rem; }
+    a { color: #08598b; } a:focus-visible, summary:focus-visible { outline: .15rem solid #08598b; }
+    code, pre { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+    pre { white-space: pre-wrap; background: #f2f6f9; padding: .7rem; }
+    .table { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: .45rem .6rem; border-bottom: 1px solid #d7e0e8; vertical-align: top; }
+    th { background: #f2f6f9; }
+    details { margin: .45rem 0; } summary { cursor: pointer; font-weight: 600; }
+    .meta { color: #435468; font-size: .92rem; } .checks { margin: .35rem 0 .9rem; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>EventGate report <span class="verdict {{ run.verdict }}">{{ run.verdict }}</span></h1>
+  <p class="meta">Run <code>{{ run.run_id }}</code> · Exit {{ run.exit_code }}{% if run.duration_seconds is not none %} · {{ "%.2f"|format(run.duration_seconds) }} s{% endif %}</p>
+  {% if run.mode == "development" %}<p class="notice">DEVELOPMENT RUN — NOT A RELEASE GATE</p>{% endif %}
+  {% if not run.evidence_complete %}<p class="notice">Incomplete evidence. Missing observations are not treated as empty results.</p>{% endif %}
+  {% if run.interrupted %}<p class="notice">The run was interrupted.</p>{% endif %}
+  <p>Selection: <strong>{{ run.selection_coverage or "unavailable" }}</strong> · Release eligible: <strong>{{ "yes" if run.release_eligible else "no" }}</strong></p>
+  <p>{% for label, path in run.artifacts.items() %}<a href="{{ link_prefix }}{{ path }}">{{ label }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+</header>
+{% if run.errors or run.cleanup|selectattr('success', 'equalto', false)|list %}
+<section aria-labelledby="errors"><h2 id="errors">Run errors</h2>
+  <ul>{% for error in run.errors %}<li><strong>{{ error.code }}</strong>: {{ error.message }}</li>{% endfor %}
+  {% for cleanup in run.cleanup if not cleanup.success %}<li>Cleanup failed for {{ cleanup.project }}. Remaining: {{ cleanup.remaining|join(", ") or "unknown" }}.</li>{% endfor %}</ul>
+</section>
+{% endif %}
+<section aria-labelledby="comparison"><h2 id="comparison">Version comparison</h2>
+  {% if run.comparisons %}
+  <div class="table"><table><thead><tr><th>Scenario</th><th>Verdict</th><th>Reason</th><th>Business differences</th></tr></thead><tbody>
+  {% for item in run.comparisons %}
+    <tr><td><code>{{ item.scenario_id }}</code></td><td><span class="verdict {{ item.verdict }}">{{ item.verdict }}</span></td>
+    <td>{{ item.reason|replace("_", " ") }}</td>
+    <td>{% if item.differences %}{% for difference in item.differences %}
+      <details><summary>{{ difference.path }}</summary><pre>Baseline: {{ difference.baseline }}
+Candidate: {{ difference.candidate }}</pre></details>
+    {% endfor %}{% else %}{{ "Not evaluated" if item.diff_status == "NOT_EVALUATED" else "None" }}{% endif %}</td></tr>
+  {% endfor %}
+  </tbody></table></div>
+  {% else %}<p>No versions could be compared.</p>{% endif %}
+</section>
+{% for role, scenarios in run.versions.items() %}
+<section>
+  <h2>{{ role|capitalize }}</h2>
+  {% if role in run.image_metadata %}<p class="meta">Image <code>{{ run.image_metadata[role].image_id }}</code> · Revision {{ run.image_metadata[role].source_revision or "unknown" }} ({{ run.image_metadata[role].source_state }})</p>{% endif %}
+  {% for scenario in scenarios %}
+    <details {% if scenario.verdict != "PASS" %}open{% endif %}>
+      <summary><code>{{ scenario.scenario_id }}</code> · <span class="verdict {{ scenario.verdict }}">{{ scenario.verdict }}</span> · {{ scenario.execution_state }}</summary>
+      {% if scenario.business %}<p>{{ scenario.business.payments|length }} payment row(s); {{ scenario.business.physical_output_count }} physical Kafka record(s); {{ scenario.business.logical_output_count }} logical completion(s).</p>{% else %}<p>Complete business snapshot unavailable.</p>{% endif %}
+      {% for error in scenario.errors %}<p><strong>{{ error.code }}:</strong> {{ error.message }}</p>{% endfor %}
+      <ul class="checks">{% for check in scenario.checks %}
+        <li><strong>{{ check.status }}</strong> · <code>{{ check.id }}</code>: {{ check.explanation }}</li>
+      {% endfor %}</ul>
+      {% if scenario.timeline %}
+      <details><summary>Timeline ({{ scenario.timeline|length }} events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        {% for event in scenario.timeline %}<tr><td>{{ event.at }}</td><td>{{ event.source }}</td><td>{{ event.event|replace("_", " ") }}</td><td><code>{{ event.details }}</code></td></tr>{% endfor %}
+        </tbody></table></div>
+      </details>{% endif %}
+      <p>{% for label, path in scenario.artifacts.items() %}<a href="{{ link_prefix }}{{ path }}">{{ label }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    </details>
+  {% endfor %}
+</section>
+{% endfor %}
+<footer><p class="meta">The final report.json is the authoritative result. Runner observations and application log entries are shown separately.</p></footer>
+</body>
+</html>

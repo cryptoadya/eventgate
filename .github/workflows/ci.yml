@@ -1,0 +1,89 @@
+name: EventGate checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: EventGate quality and integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out tested commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.EXPECTED_SHA }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Record native Linux environment
+        run: |
+          mkdir -p results
+          actual_sha="$(git rev-parse HEAD)"
+          printf '%s\n' "$actual_sha" > results/tested-sha.txt
+          test "$actual_sha" = "$EXPECTED_SHA"
+          uname -sm > results/platform.txt
+          python3 --version >> results/platform.txt
+          docker version >> results/platform.txt
+          docker compose version >> results/platform.txt
+          docker buildx version >> results/platform.txt
+          docker_platform="$(docker version --format '{{.Server.Os}}/{{.Server.Arch}}')"
+          test "$(uname -sm)" = "Linux x86_64"
+          test "$docker_platform" = "linux/amd64"
+
+      - name: Install pinned Python dependencies
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install -r requirements-dev.lock
+          .venv/bin/python -m pip install --no-deps -e .
+
+      - name: Lint, type check, and run unit tests
+        run: |
+          .venv/bin/python -m ruff check .
+          .venv/bin/python -m ruff format --check .
+          .venv/bin/python -m mypy src
+          .venv/bin/python -m pytest tests/unit -q --junitxml=results/unit.xml
+
+      - name: Prepare images
+        run: |
+          set -a
+          source config/infrastructure.env.example
+          set +a
+          docker pull "$EVENTGATE_KAFKA_IMAGE"
+          docker pull "$EVENTGATE_POSTGRES_IMAGE"
+          docker build -f docker/payment.Dockerfile \
+            --build-arg PAYMENT_VARIANT=stable \
+            --build-arg SOURCE_REVISION="$EXPECTED_SHA" --build-arg SOURCE_STATE=clean \
+            -t eventgate-ci:stable .
+          docker image inspect --format '{{.Id}}' eventgate-ci:stable > results/tested-image-id.txt
+
+      - name: Run integration and end-to-end tests
+        run: |
+          .venv/bin/python -m pytest tests/integration tests/e2e -q \
+            --basetemp "$RUNNER_TEMP/eventgate-test-evidence" --junitxml=results/integration.xml
+
+      - name: Save available test evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: eventgate-test-evidence
+          if-no-files-found: warn
+          path: |
+            results/
+            ${{ runner.temp }}/eventgate-test-evidence/**/report.json
+            ${{ runner.temp }}/eventgate-test-evidence/**/report.html
+            ${{ runner.temp }}/eventgate-test-evidence/**/junit.xml
+            ${{ runner.temp }}/eventgate-test-evidence/**/diagnostics.zip
+            ${{ runner.temp }}/eventgate-test-evidence/**/containers.log
+            ${{ runner.temp }}/eventgate-test-evidence/**/evidence.json
+            ${{ runner.temp }}/eventgate-test-evidence/**/environment.json
