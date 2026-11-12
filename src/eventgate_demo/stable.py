@@ -13,5 +13,5 @@ async def process_stable(
     if connection.info.transaction_status != TransactionStatus.IDLE:
         raise ValueError("Payment processing requires an idle PostgreSQL connection")
     async with connection.transaction():
-        if await insert_inbox(connection, request.event_id):
-            await insert_payment_and_outbox(connection, request)
+        await insert_inbox(connection, request.event_id)
+        await insert_payment_and_outbox(connection, request)
