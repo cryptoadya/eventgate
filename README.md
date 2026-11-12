@@ -8,6 +8,25 @@ The MVP supports the [payment-v1 contract](docs/adapter-payment-v1.md). The demo
 synthetic payment records. EventGate verifies one payment per input ID in its selected
 scenarios. Kafka can deliver more than one physical copy of the same completion.
 
+## A regression you can reproduce
+
+A worker saves a payment, then crashes before acknowledging its Kafka input.
+Kafka delivers that input again. Stable recognizes the request and keeps one payment;
+Buggy creates a second payment. EventGate deliberately triggers this failure and
+checks PostgreSQL and Kafka independently before deciding PASS, FAIL, or ERROR.
+
+See the [recorded example](docs/example-result.md) without installing anything.
+The [demo walkthrough](docs/demo.md#verify-all-five-scenarios) covers normal delivery,
+duplicate delivery, a clean restart, and crashes at two transaction boundaries.
+
+## Scope
+
+This release supports the payment-v1 contract, Kafka and PostgreSQL, one consumer,
+one publisher, and one partition per topic. It uses synthetic payments, not a payment
+provider. Arbitrary application adapters are not supported yet. PASS applies to the
+selected checks; it is not a guarantee of production reliability or exactly-once
+message delivery. See [architecture and limits](docs/architecture.md).
+
 ## Quick start
 
 Use Python 3.12, Docker Engine, the Docker Compose CLI plugin, and Docker Buildx.
@@ -19,6 +38,13 @@ in the terminal where you will run EventGate.
 docker version
 docker compose version
 docker buildx version
+```
+
+Clone the repository and enter it first:
+
+```bash
+git clone https://github.com/cryptoadya/eventgate.git
+cd eventgate
 ```
 
 Run the following commands from the repository root. The image and dependency references
@@ -114,11 +140,10 @@ current source tree. Run the pull commands above first.
 .venv/bin/python -m pytest -q
 ```
 
-The target platforms are macOS Apple Silicon and Linux x86-64. Development and Docker
-runs have been exercised on macOS ARM64; a native Linux x86-64 run is still unverified.
-For native Linux acceptance, verify that `uname -sm` reports `Linux x86_64` and that
-the Docker server uses `linux/amd64`. Then run the Quick start and Local checks on
-that host. See the architecture notes for limits of the checked behavior.
+Acceptance checks ran on macOS Apple Silicon and on GitHub-hosted Linux x86-64
+with Python 3.12. See the [macOS demo results](docs/demo.md#verified-local-run)
+and [hosted acceptance results](docs/ci.md#hosted-acceptance-results) for the
+tested revisions, outcomes, and timings.
 
 ## Updating dependency locks
 

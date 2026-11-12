@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eventgate"
-version = "0.1.0"
+version = "1.0.0"
 description = "Regression checks for event-driven payment handlers"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -19,6 +19,11 @@ dependencies = [
     "sqlalchemy>=2.0,<3",
     "typer>=0.16,<1",
 ]
+
+[project.urls]
+Repository = "https://github.com/cryptoadya/eventgate"
+Documentation = "https://github.com/cryptoadya/eventgate#readme"
+Issues = "https://github.com/cryptoadya/eventgate/issues"
 
 [project.optional-dependencies]
 dev = ["build>=1,<2", "mypy>=1,<2", "pytest>=8,<10", "ruff>=0.11,<1", "setuptools==80.9.0", "types-pyyaml>=6,<7"]

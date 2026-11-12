@@ -32,11 +32,28 @@ pull request workflow reference](https://docs.github.com/en/actions/reference/wo
    URL, head SHA, and report showing the extra payment.
 3. Restore the condition in a follow-up commit. Save the completed successful run URL
    and head SHA. A queued run is not acceptance evidence.
-4. In branch protection or a repository ruleset, require the status check named
-   **EventGate demo gate** for the protected branch. The workflow alone cannot block a
-   merge. Use the [GitHub branch protection instructions](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule)
-   and verify that the required check appears on the pull request.
+4. To enforce the gate on merges, require the **EventGate demo gate** status
+   check in branch protection or a repository ruleset. Verify that GitHub shows
+   the check as required on the pull request. See the
+   [GitHub branch protection instructions](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule).
 
-The workflows and their contract tests are available locally. A native hosted Linux
-run, the faulty/fixed demo runs, and repository protection have not been verified
-until their completed evidence is recorded.
+## Hosted acceptance results
+
+On 2026-11-12, the [Linux acceptance run](https://github.com/cryptoadya/eventgate/actions/runs/43186976664)
+tested commit `177ba693ba8e3e4a8171481cc6c7735c3866d665` on Ubuntu 24.04 x86-64,
+with Python 3.12.16, Docker `linux/amd64`, and Compose 2.38.2. All 89 unit tests
+and 47 integration and end-to-end tests passed, with zero skips. Ruff lint and
+format checks and mypy passed. With images prepared, Stable / Stable verification
+took 206.96 seconds including cleanup. Image preparation took 39 seconds.
+
+The [demonstration pull request](https://github.com/cryptoadya/eventgate/pull/1)
+used that commit as its Baseline. Both runs uploaded `eventgate-demo-evidence`
+with the checkout SHAs and comparison reports.
+
+| Candidate commit | Gate result | Evidence |
+| --- | --- | --- |
+| `937fd12c4b7fa72982cb9f7952465f18ddda6db3` | [Expected FAIL](https://github.com/cryptoadya/eventgate/actions/runs/43196027368) | Duplicate delivery and recovery after the database commit each produced two Candidate payments and one Baseline payment. Verify exited 1. |
+| `7557f67b789b61979093cdb23ede405b80e3eef6` | [PASS](https://github.com/cryptoadya/eventgate/actions/runs/43196747054) | All five comparisons passed. Both previously failing scenarios produced one payment per version. Verify exited 0. |
+
+The demonstration PR was closed without merging. For future pull requests,
+review the gate result manually before merging to `main`.

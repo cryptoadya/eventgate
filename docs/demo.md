@@ -121,5 +121,5 @@ and Compose 2.40.3. The demo images used Python 3.12.16.
 
 The two image pull commands took 44.21 s and 43.83 s with images already cached.
 The Stable and Buggy build commands took 37.59 s and 31.62 s. These times are
-separate from verification. Native Linux x86-64 and GitHub-hosted performance
-remain unverified. See [CI and the demo gate](ci.md) for the remaining hosted checks.
+separate from verification. For the Linux x86-64 timings and the faulty and fixed
+Candidate runs, see the [hosted acceptance results](ci.md#hosted-acceptance-results).

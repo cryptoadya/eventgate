@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EventGate report — FAIL</title>
+  <style>
+    :root { color-scheme: light; font: 16px/1.55 system-ui, sans-serif; color: #172738; background: #eef3f6; }
+    body { max-width: 74rem; margin: 2rem auto; padding: 0 1rem; }
+    header, section { background: white; border: 1px solid #cbd8e2; border-radius: .55rem; margin: 1rem 0; padding: 1.3rem; }
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { margin: 0 0 .55rem; }
+    .verdict { display: inline-block; padding: .1rem .5rem; border-radius: .35rem; font-weight: 700; background: #e8eef3; }
+    .PASS { color: #14532d; background: #dcfce7; } .FAIL, .ERROR { color: #9a2221; background: #fee2e2; }
+    .notice { background: #fff5d8; border-left: .25rem solid #976318; padding: .6rem .8rem; }
+    a { color: #08598b; } a:focus-visible, summary:focus-visible { outline: .15rem solid #08598b; }
+    code, pre { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+    pre { white-space: pre-wrap; background: #f2f6f9; padding: .7rem; }
+    .table { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: .45rem .6rem; border-bottom: 1px solid #d7e0e8; vertical-align: top; }
+    th { background: #f2f6f9; }
+    details { margin: .45rem 0; } summary { cursor: pointer; font-weight: 600; }
+    .meta { color: #435468; font-size: .92rem; } .checks { margin: .35rem 0 .9rem; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>EventGate report <span class="verdict FAIL">FAIL</span></h1>
+  <p class="meta">Run <code>1b3cb925737448ec9af8a24b963f0fca</code> · Exit 1 · 183.06 s</p>
+
+
+
+  <p>Selection: <strong>full</strong> · Release eligible: <strong>no</strong></p>
+  <p><a href="report.json">report</a> · <a href="report.html">html</a> · <a href="junit.xml">junit</a> · <a href="diagnostics.zip">diagnostics</a></p>
+</header>
+
+<section aria-labelledby="comparison"><h2 id="comparison">Version comparison</h2>
+
+  <div class="table"><table><thead><tr><th>Scenario</th><th>Verdict</th><th>Reason</th><th>Business differences</th></tr></thead><tbody>
+
+    <tr><td><code>normal</code></td><td><span class="verdict PASS">PASS</span></td>
+    <td>equivalent</td>
+    <td>None</td></tr>
+
+    <tr><td><code>duplicate_delivery</code></td><td><span class="verdict FAIL">FAIL</span></td>
+    <td>candidate regression</td>
+    <td>
+      <details><summary>payments</summary><pre>Baseline: [{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;order_id&#39;: &#39;order-1042&#39;, &#39;amount_minor&#39;: 5000, &#39;currency&#39;: &#39;EUR&#39;}]
+Candidate: [{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;order_id&#39;: &#39;order-1042&#39;, &#39;amount_minor&#39;: 5000, &#39;currency&#39;: &#39;EUR&#39;}, {&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;order_id&#39;: &#39;order-1042&#39;, &#39;amount_minor&#39;: 5000, &#39;currency&#39;: &#39;EUR&#39;}]</pre></details>
+    </td></tr>
+
+    <tr><td><code>consumer_restart</code></td><td><span class="verdict PASS">PASS</span></td>
+    <td>equivalent</td>
+    <td>None</td></tr>
+
+    <tr><td><code>crash_after_db_commit</code></td><td><span class="verdict FAIL">FAIL</span></td>
+    <td>candidate regression</td>
+    <td>
+      <details><summary>payments</summary><pre>Baseline: [{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;order_id&#39;: &#39;order-1042&#39;, &#39;amount_minor&#39;: 5000, &#39;currency&#39;: &#39;EUR&#39;}]
+Candidate: [{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;order_id&#39;: &#39;order-1042&#39;, &#39;amount_minor&#39;: 5000, &#39;currency&#39;: &#39;EUR&#39;}, {&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;order_id&#39;: &#39;order-1042&#39;, &#39;amount_minor&#39;: 5000, &#39;currency&#39;: &#39;EUR&#39;}]</pre></details>
+    </td></tr>
+
+    <tr><td><code>crash_after_publish_ack</code></td><td><span class="verdict PASS">PASS</span></td>
+    <td>equivalent</td>
+    <td>None</td></tr>
+
+  </tbody></table></div>
+
+</section>
+
+<section>
+  <h2>Baseline</h2>
+  <p class="meta">Image <code>sha256:4118e0689bb8ff86f6ab08926d3c3a690ebf4adeb1f608e6d2e21b3fdfa4b6c0</code> · Revision 177ba693ba8e3e4a8171481cc6c7735c3866d665 (clean)</p>
+
+    <details >
+      <summary><code>normal</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>1 payment row(s); 1 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (12 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 09:58:39.659292+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;6258b6ba-661d-43d4-a5a3-3697ab2997fd&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:39.723750+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;f3dde50b-ada4-43ad-addf-ede52b61ad24&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.711014+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 09:58:40.711378+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;6258b6ba-661d-43d4-a5a3-3697ab2997fd&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.715878+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;6258b6ba-661d-43d4-a5a3-3697ab2997fd&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.740992+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;f3dde50b-ada4-43ad-addf-ede52b61ad24&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.741723+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;f3dde50b-ada4-43ad-addf-ede52b61ad24&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.816864+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;6258b6ba-661d-43d4-a5a3-3697ab2997fd&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.905810+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:58:40.922162+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;6258b6ba-661d-43d4-a5a3-3697ab2997fd&#39;}</code></td></tr><tr><td>2026-11-12 09:58:40.947498+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;f3dde50b-ada4-43ad-addf-ede52b61ad24&#39;}</code></td></tr><tr><td>2026-11-12 09:58:41.030476+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 1, &#39;output_records&#39;: 1}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="baseline/normal/containers.log">logs</a> · <a href="baseline/normal/evidence.json">evidence</a> · <a href="baseline/normal/environment.json">environment</a></p>
+    </details>
+
+    <details >
+      <summary><code>duplicate_delivery</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>1 payment row(s); 1 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (17 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 09:58:55.763470+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;698b0bb0-872a-4715-ab09-5af2d9b0a29e&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:58:55.853032+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:56.830978+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 09:58:56.833643+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:56.837596+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:56.903646+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;698b0bb0-872a-4715-ab09-5af2d9b0a29e&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:58:56.904276+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;698b0bb0-872a-4715-ab09-5af2d9b0a29e&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:58:56.937939+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:57.066889+00:00</td><td>runner</td><td>first input processed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:58:57.576001+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:57.576272+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:58:57.577692+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:57.644510+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 2}</code></td></tr><tr><td>2026-11-12 09:58:57.678983+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:58:57.681523+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;66acedd7-5d8e-4707-ba66-95a28c04bc46&#39;}</code></td></tr><tr><td>2026-11-12 09:58:57.712007+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;698b0bb0-872a-4715-ab09-5af2d9b0a29e&#39;}</code></td></tr><tr><td>2026-11-12 09:58:57.794362+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 1, &#39;output_records&#39;: 1}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="baseline/duplicate_delivery/containers.log">logs</a> · <a href="baseline/duplicate_delivery/evidence.json">evidence</a> · <a href="baseline/duplicate_delivery/environment.json">environment</a></p>
+    </details>
+
+    <details >
+      <summary><code>consumer_restart</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>2 payment row(s); 2 physical Kafka record(s); 2 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (22 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 09:59:12.588996+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;b2822e4b-0289-46e3-88d5-55b3d4db5625&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:12.821342+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;31e4abde-c245-4b75-b59c-d06c0d9fa0fd&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:13.651954+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 09:59:13.656118+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;31e4abde-c245-4b75-b59c-d06c0d9fa0fd&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:13.659512+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;31e4abde-c245-4b75-b59c-d06c0d9fa0fd&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:13.715202+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;b2822e4b-0289-46e3-88d5-55b3d4db5625&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:13.715276+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;b2822e4b-0289-46e3-88d5-55b3d4db5625&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:13.719992+00:00</td><td>runner</td><td>first input processed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:59:13.760445+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;31e4abde-c245-4b75-b59c-d06c0d9fa0fd&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:14.186862+00:00</td><td>runner</td><td>worker stopped</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;exit_code&#39;: 0}</code></td></tr><tr><td>2026-11-12 09:59:15.194731+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;e58ee4af-ea21-42d1-ba0b-3dc05fe9e6b8&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:15.568423+00:00</td><td>runner</td><td>worker restarted</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;e58ee4af-ea21-42d1-ba0b-3dc05fe9e6b8&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.075491+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;e58ee4af-ea21-42d1-ba0b-3dc05fe9e6b8&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1, &#39;event_id&#39;: &#39;evt-1002&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.076792+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1002&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:59:16.079971+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;e58ee4af-ea21-42d1-ba0b-3dc05fe9e6b8&#39;, &#39;event_id&#39;: &#39;evt-1002&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.143063+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;b2822e4b-0289-46e3-88d5-55b3d4db5625&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1002&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.143358+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;b2822e4b-0289-46e3-88d5-55b3d4db5625&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1002&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.180370+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;e58ee4af-ea21-42d1-ba0b-3dc05fe9e6b8&#39;, &#39;event_id&#39;: &#39;evt-1002&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.303497+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 2}</code></td></tr><tr><td>2026-11-12 09:59:16.383697+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;e58ee4af-ea21-42d1-ba0b-3dc05fe9e6b8&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.446847+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;b2822e4b-0289-46e3-88d5-55b3d4db5625&#39;}</code></td></tr><tr><td>2026-11-12 09:59:16.524737+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 2, &#39;output_records&#39;: 2}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="baseline/consumer_restart/containers.log">logs</a> · <a href="baseline/consumer_restart/evidence.json">evidence</a> · <a href="baseline/consumer_restart/environment.json">environment</a></p>
+    </details>
+
+    <details >
+      <summary><code>crash_after_db_commit</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>1 payment row(s); 1 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (20 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 09:59:31.197363+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;83189e5d-8a0c-4243-b1cb-a4731fa46dd9&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:31.271955+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;9b57abb8-d0c4-4f26-a930-41f7f2487240&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:31.712269+00:00</td><td>runner</td><td>failpoint armed</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;name&#39;: &#39;after_db_commit_before_offset_commit&#39;, &#39;token&#39;: &#39;3caf934a-07b0-4cf7-9b6f-089fdd2ceed6&#39;, &#39;target_id&#39;: &#39;evt-1001&#39;}</code></td></tr><tr><td>2026-11-12 09:59:32.221339+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;9b57abb8-d0c4-4f26-a930-41f7f2487240&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:32.222290+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 09:59:32.225472+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;9b57abb8-d0c4-4f26-a930-41f7f2487240&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:32.227421+00:00</td><td>application</td><td>failpoint fired</td><td><code>{&#39;token&#39;: &#39;3caf934a-07b0-4cf7-9b6f-089fdd2ceed6&#39;, &#39;name&#39;: &#39;after_db_commit_before_offset_commit&#39;, &#39;target_id&#39;: &#39;evt-1001&#39;, &#39;contract_version&#39;: &#39;payment-v1&#39;, &#39;run_id&#39;: &#39;1b3cb925737448ec9af8a24b963f0fca&#39;, &#39;scenario_id&#39;: &#39;crash_after_db_commit&#39;, &#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;9b57abb8-d0c4-4f26-a930-41f7f2487240&#39;, &#39;state&#39;: &#39;fired&#39;}</code></td></tr><tr><td>2026-11-12 09:59:32.468725+00:00</td><td>runner</td><td>worker crashed</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;exit_code&#39;: 86, &#39;token&#39;: &#39;3caf934a-07b0-4cf7-9b6f-089fdd2ceed6&#39;}</code></td></tr><tr><td>2026-11-12 09:59:32.536244+00:00</td><td>runner</td><td>database committed before offset</td><td><code>{&#39;committed_offset&#39;: None}</code></td></tr><tr><td>2026-11-12 09:59:37.279548+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;6ec6e690-17f8-4c6c-928c-52e4db42800f&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:37.383143+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;6ec6e690-17f8-4c6c-928c-52e4db42800f&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:37.383917+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;6ec6e690-17f8-4c6c-928c-52e4db42800f&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:37.484923+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;6ec6e690-17f8-4c6c-928c-52e4db42800f&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:38.077279+00:00</td><td>runner</td><td>worker restarted</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;6ec6e690-17f8-4c6c-928c-52e4db42800f&#39;}</code></td></tr><tr><td>2026-11-12 09:59:38.105862+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;83189e5d-8a0c-4243-b1cb-a4731fa46dd9&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:38.107292+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;83189e5d-8a0c-4243-b1cb-a4731fa46dd9&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:38.116817+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:59:38.189130+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;6ec6e690-17f8-4c6c-928c-52e4db42800f&#39;}</code></td></tr><tr><td>2026-11-12 09:59:38.212807+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;83189e5d-8a0c-4243-b1cb-a4731fa46dd9&#39;}</code></td></tr><tr><td>2026-11-12 09:59:38.296847+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 1, &#39;output_records&#39;: 1}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="baseline/crash_after_db_commit/containers.log">logs</a> · <a href="baseline/crash_after_db_commit/evidence.json">evidence</a> · <a href="baseline/crash_after_db_commit/environment.json">environment</a></p>
+    </details>
+
+    <details >
+      <summary><code>crash_after_publish_ack</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>1 payment row(s); 2 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (19 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 09:59:53.513329+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;34a436c6-dd1e-4f2a-8797-96d74337c4ca&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:53.574663+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;a0ad1546-9a6c-40be-b521-a10545bdfc5c&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.071001+00:00</td><td>runner</td><td>failpoint armed</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;name&#39;: &#39;after_publish_ack_before_outbox_mark&#39;, &#39;token&#39;: &#39;1921db7f-3a1f-45f3-8416-6a82ecb3b981&#39;, &#39;target_id&#39;: &#39;payment.completed:evt-1001&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.580764+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 09:59:54.581736+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;a0ad1546-9a6c-40be-b521-a10545bdfc5c&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.587871+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;a0ad1546-9a6c-40be-b521-a10545bdfc5c&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.636754+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;34a436c6-dd1e-4f2a-8797-96d74337c4ca&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.637926+00:00</td><td>application</td><td>failpoint fired</td><td><code>{&#39;token&#39;: &#39;1921db7f-3a1f-45f3-8416-6a82ecb3b981&#39;, &#39;name&#39;: &#39;after_publish_ack_before_outbox_mark&#39;, &#39;target_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;contract_version&#39;: &#39;payment-v1&#39;, &#39;run_id&#39;: &#39;1b3cb925737448ec9af8a24b963f0fca&#39;, &#39;scenario_id&#39;: &#39;crash_after_publish_ack&#39;, &#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;34a436c6-dd1e-4f2a-8797-96d74337c4ca&#39;, &#39;state&#39;: &#39;fired&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.689109+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;a0ad1546-9a6c-40be-b521-a10545bdfc5c&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.880015+00:00</td><td>runner</td><td>worker crashed</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;exit_code&#39;: 86, &#39;token&#39;: &#39;1921db7f-3a1f-45f3-8416-6a82ecb3b981&#39;}</code></td></tr><tr><td>2026-11-12 09:59:54.964903+00:00</td><td>runner</td><td>output observed before outbox mark</td><td><code>{&#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;records&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:59:56.013978+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;710a6523-225d-4015-b4c6-a00562752f05&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:56.035565+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;710a6523-225d-4015-b4c6-a00562752f05&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:56.036591+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;710a6523-225d-4015-b4c6-a00562752f05&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 09:59:56.423450+00:00</td><td>runner</td><td>worker restarted</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;710a6523-225d-4015-b4c6-a00562752f05&#39;}</code></td></tr><tr><td>2026-11-12 09:59:56.489579+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 09:59:56.502411+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;a0ad1546-9a6c-40be-b521-a10545bdfc5c&#39;}</code></td></tr><tr><td>2026-11-12 09:59:56.542640+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;710a6523-225d-4015-b4c6-a00562752f05&#39;}</code></td></tr><tr><td>2026-11-12 09:59:56.623237+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 1, &#39;output_records&#39;: 2}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="baseline/crash_after_publish_ack/containers.log">logs</a> · <a href="baseline/crash_after_publish_ack/evidence.json">evidence</a> · <a href="baseline/crash_after_publish_ack/environment.json">environment</a></p>
+    </details>
+
+</section>
+
+<section>
+  <h2>Candidate</h2>
+  <p class="meta">Image <code>sha256:0ca6989fe91f947bc4e7abdd2a1de8420a5fe84062003e77fb19c2c11e4c9205</code> · Revision 937fd12c4b7fa72982cb9f7952465f18ddda6db3 (clean)</p>
+
+    <details >
+      <summary><code>normal</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>1 payment row(s); 1 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (12 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 10:00:11.345285+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;74ca9469-0d1f-4b67-9775-3265f920eb33&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:11.481983+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;20c85e52-1ac5-42dd-9c27-7b522af17bd6&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.370483+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 10:00:12.371640+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;20c85e52-1ac5-42dd-9c27-7b522af17bd6&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.374800+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;20c85e52-1ac5-42dd-9c27-7b522af17bd6&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.460405+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;74ca9469-0d1f-4b67-9775-3265f920eb33&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.461193+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;74ca9469-0d1f-4b67-9775-3265f920eb33&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.475542+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;20c85e52-1ac5-42dd-9c27-7b522af17bd6&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.547460+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:00:12.578730+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;20c85e52-1ac5-42dd-9c27-7b522af17bd6&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.663843+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;74ca9469-0d1f-4b67-9775-3265f920eb33&#39;}</code></td></tr><tr><td>2026-11-12 10:00:12.744369+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 1, &#39;output_records&#39;: 1}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="candidate/normal/containers.log">logs</a> · <a href="candidate/normal/evidence.json">evidence</a> · <a href="candidate/normal/environment.json">environment</a></p>
+    </details>
+
+    <details open>
+      <summary><code>duplicate_delivery</code> · <span class="verdict FAIL">FAIL</span> · COMPLETED</summary>
+      <p>2 payment row(s); 1 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>FAIL</strong> · <code>payment_count</code>: evt-1001: expected 1 payment; observed 2</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (17 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 10:00:27.311669+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;ebf3330d-5bd4-45a1-b4b3-d1d9468ee078&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:27.486628+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.304244+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 10:00:28.305122+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.308894+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.328997+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;ebf3330d-5bd4-45a1-b4b3-d1d9468ee078&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.329890+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;ebf3330d-5bd4-45a1-b4b3-d1d9468ee078&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.367986+00:00</td><td>runner</td><td>first input processed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:00:28.409099+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.877862+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:00:28.878619+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.880251+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.941222+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 2}</code></td></tr><tr><td>2026-11-12 10:00:28.980892+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:28.982914+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;ff17571b-d3f6-4dc7-a5d2-cdd561efe3a2&#39;}</code></td></tr><tr><td>2026-11-12 10:00:29.033642+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;ebf3330d-5bd4-45a1-b4b3-d1d9468ee078&#39;}</code></td></tr><tr><td>2026-11-12 10:00:29.064573+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 2, &#39;output_records&#39;: 1}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="candidate/duplicate_delivery/containers.log">logs</a> · <a href="candidate/duplicate_delivery/evidence.json">evidence</a> · <a href="candidate/duplicate_delivery/environment.json">environment</a></p>
+    </details>
+
+    <details >
+      <summary><code>consumer_restart</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>2 payment row(s); 2 physical Kafka record(s); 2 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (22 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 10:00:43.637929+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;3421702c-224f-4ea1-be01-197666b03eab&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:43.730912+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;4d8cf49c-eede-4c91-812f-3b9f827940eb&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:44.573875+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 10:00:44.574532+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;4d8cf49c-eede-4c91-812f-3b9f827940eb&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:44.578228+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;4d8cf49c-eede-4c91-812f-3b9f827940eb&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:44.654506+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;3421702c-224f-4ea1-be01-197666b03eab&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:44.655203+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;3421702c-224f-4ea1-be01-197666b03eab&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:44.678491+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;4d8cf49c-eede-4c91-812f-3b9f827940eb&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:44.800053+00:00</td><td>runner</td><td>first input processed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:00:45.165700+00:00</td><td>runner</td><td>worker stopped</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;exit_code&#39;: 0}</code></td></tr><tr><td>2026-11-12 10:00:46.131204+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;16362a91-6379-45b1-a3f9-772dde33aa5b&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:46.591837+00:00</td><td>runner</td><td>worker restarted</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;16362a91-6379-45b1-a3f9-772dde33aa5b&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.099174+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1002&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:00:47.100468+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;16362a91-6379-45b1-a3f9-772dde33aa5b&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 1, &#39;event_id&#39;: &#39;evt-1002&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.103619+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;16362a91-6379-45b1-a3f9-772dde33aa5b&#39;, &#39;event_id&#39;: &#39;evt-1002&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.182681+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;3421702c-224f-4ea1-be01-197666b03eab&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1002&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.183289+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;3421702c-224f-4ea1-be01-197666b03eab&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1002&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.204363+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;16362a91-6379-45b1-a3f9-772dde33aa5b&#39;, &#39;event_id&#39;: &#39;evt-1002&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.325718+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 2}</code></td></tr><tr><td>2026-11-12 10:00:47.407487+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;16362a91-6379-45b1-a3f9-772dde33aa5b&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.486520+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;3421702c-224f-4ea1-be01-197666b03eab&#39;}</code></td></tr><tr><td>2026-11-12 10:00:47.562715+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 2, &#39;output_records&#39;: 2}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="candidate/consumer_restart/containers.log">logs</a> · <a href="candidate/consumer_restart/evidence.json">evidence</a> · <a href="candidate/consumer_restart/environment.json">environment</a></p>
+    </details>
+
+    <details open>
+      <summary><code>crash_after_db_commit</code> · <span class="verdict FAIL">FAIL</span> · COMPLETED</summary>
+      <p>2 payment row(s); 1 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>FAIL</strong> · <code>payment_count</code>: evt-1001: expected 1 payment; observed 2</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (20 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 10:01:02.139146+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;7024ecda-2bd7-49d7-8ab5-815b85073c89&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:02.277104+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;c7cf5d38-98c2-43ea-81e5-504278138f00&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:02.753327+00:00</td><td>runner</td><td>failpoint armed</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;name&#39;: &#39;after_db_commit_before_offset_commit&#39;, &#39;token&#39;: &#39;c27e6c26-128a-4667-b7a9-4f62fd689626&#39;, &#39;target_id&#39;: &#39;evt-1001&#39;}</code></td></tr><tr><td>2026-11-12 10:01:03.261227+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;c7cf5d38-98c2-43ea-81e5-504278138f00&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:03.261983+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 10:01:03.265065+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;c7cf5d38-98c2-43ea-81e5-504278138f00&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:03.267478+00:00</td><td>application</td><td>failpoint fired</td><td><code>{&#39;token&#39;: &#39;c27e6c26-128a-4667-b7a9-4f62fd689626&#39;, &#39;name&#39;: &#39;after_db_commit_before_offset_commit&#39;, &#39;target_id&#39;: &#39;evt-1001&#39;, &#39;contract_version&#39;: &#39;payment-v1&#39;, &#39;run_id&#39;: &#39;1b3cb925737448ec9af8a24b963f0fca&#39;, &#39;scenario_id&#39;: &#39;crash_after_db_commit&#39;, &#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;c7cf5d38-98c2-43ea-81e5-504278138f00&#39;, &#39;state&#39;: &#39;fired&#39;}</code></td></tr><tr><td>2026-11-12 10:01:03.504528+00:00</td><td>runner</td><td>worker crashed</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;exit_code&#39;: 86, &#39;token&#39;: &#39;c27e6c26-128a-4667-b7a9-4f62fd689626&#39;}</code></td></tr><tr><td>2026-11-12 10:01:03.569825+00:00</td><td>runner</td><td>database committed before offset</td><td><code>{&#39;committed_offset&#39;: None}</code></td></tr><tr><td>2026-11-12 10:01:08.282793+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;3578d3bd-77fd-4361-8257-54e692ce5764&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:08.385270+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;3578d3bd-77fd-4361-8257-54e692ce5764&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:08.387798+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;3578d3bd-77fd-4361-8257-54e692ce5764&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:08.488842+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;3578d3bd-77fd-4361-8257-54e692ce5764&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:09.049365+00:00</td><td>runner</td><td>worker restarted</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;3578d3bd-77fd-4361-8257-54e692ce5764&#39;}</code></td></tr><tr><td>2026-11-12 10:01:09.090131+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;7024ecda-2bd7-49d7-8ab5-815b85073c89&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:09.091414+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;7024ecda-2bd7-49d7-8ab5-815b85073c89&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:09.153457+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:01:09.191374+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;3578d3bd-77fd-4361-8257-54e692ce5764&#39;}</code></td></tr><tr><td>2026-11-12 10:01:09.193580+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;7024ecda-2bd7-49d7-8ab5-815b85073c89&#39;}</code></td></tr><tr><td>2026-11-12 10:01:09.279872+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 2, &#39;output_records&#39;: 1}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="candidate/crash_after_db_commit/containers.log">logs</a> · <a href="candidate/crash_after_db_commit/evidence.json">evidence</a> · <a href="candidate/crash_after_db_commit/environment.json">environment</a></p>
+    </details>
+
+    <details >
+      <summary><code>crash_after_publish_ack</code> · <span class="verdict PASS">PASS</span> · COMPLETED</summary>
+      <p>1 payment row(s); 2 physical Kafka record(s); 1 logical completion(s).</p>
+
+      <ul class="checks">
+        <li><strong>PASS</strong> · <code>inbox_count</code>: One inbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_count</code>: One payment per input</li>
+
+        <li><strong>PASS</strong> · <code>payment_fields</code>: Payments match input orders, amounts, and currency</li>
+
+        <li><strong>PASS</strong> · <code>outbox_contract</code>: One matching outbox row per input</li>
+
+        <li><strong>PASS</strong> · <code>outbox_published</code>: No unpublished outbox rows remain</li>
+
+        <li><strong>PASS</strong> · <code>completion_contract</code>: One consistent logical completion per input</li>
+
+        <li><strong>PASS</strong> · <code>no_unknown_effects</code>: No effects for unknown inputs</li>
+
+        <li><strong>PASS</strong> · <code>application_progress</code>: Required progress and recovery were independently proven</li>
+      </ul>
+
+      <details><summary>Timeline (19 events)</summary>
+        <div class="table"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Details</th></tr></thead><tbody>
+        <tr><td>2026-11-12 10:01:24.261056+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;20ee6545-1787-466e-b9cf-0676ea9b1d74&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:24.293507+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;e2db271d-5702-4208-890f-ce4499cdd929&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:24.745299+00:00</td><td>runner</td><td>failpoint armed</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;name&#39;: &#39;after_publish_ack_before_outbox_mark&#39;, &#39;token&#39;: &#39;a3f8d17a-f21f-4ccc-a658-92e12d279272&#39;, &#39;target_id&#39;: &#39;payment.completed:evt-1001&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.255663+00:00</td><td>runner</td><td>input confirmed</td><td><code>{&#39;event_id&#39;: &#39;evt-1001&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0}</code></td></tr><tr><td>2026-11-12 10:01:25.261980+00:00</td><td>application</td><td>message received</td><td><code>{&#39;process_instance_id&#39;: &#39;e2db271d-5702-4208-890f-ce4499cdd929&#39;, &#39;topic&#39;: &#39;payments.requested&#39;, &#39;partition&#39;: 0, &#39;offset&#39;: 0, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.272216+00:00</td><td>application</td><td>database committed</td><td><code>{&#39;process_instance_id&#39;: &#39;e2db271d-5702-4208-890f-ce4499cdd929&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.306339+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;20ee6545-1787-466e-b9cf-0676ea9b1d74&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.315729+00:00</td><td>application</td><td>failpoint fired</td><td><code>{&#39;token&#39;: &#39;a3f8d17a-f21f-4ccc-a658-92e12d279272&#39;, &#39;name&#39;: &#39;after_publish_ack_before_outbox_mark&#39;, &#39;target_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;contract_version&#39;: &#39;payment-v1&#39;, &#39;run_id&#39;: &#39;1b3cb925737448ec9af8a24b963f0fca&#39;, &#39;scenario_id&#39;: &#39;crash_after_publish_ack&#39;, &#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;20ee6545-1787-466e-b9cf-0676ea9b1d74&#39;, &#39;state&#39;: &#39;fired&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.373253+00:00</td><td>application</td><td>offset committed</td><td><code>{&#39;process_instance_id&#39;: &#39;e2db271d-5702-4208-890f-ce4499cdd929&#39;, &#39;event_id&#39;: &#39;evt-1001&#39;, &#39;offset&#39;: 0, &#39;role&#39;: &#39;consumer&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.603844+00:00</td><td>runner</td><td>worker crashed</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;exit_code&#39;: 86, &#39;token&#39;: &#39;a3f8d17a-f21f-4ccc-a658-92e12d279272&#39;}</code></td></tr><tr><td>2026-11-12 10:01:25.684710+00:00</td><td>runner</td><td>output observed before outbox mark</td><td><code>{&#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;records&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:01:26.603032+00:00</td><td>application</td><td>worker ready</td><td><code>{&#39;process_instance_id&#39;: &#39;972966e9-5887-44c4-ac1d-de41290a52bb&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:26.640889+00:00</td><td>application</td><td>publish acknowledged</td><td><code>{&#39;process_instance_id&#39;: &#39;972966e9-5887-44c4-ac1d-de41290a52bb&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;offset&#39;: 1, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:26.641837+00:00</td><td>application</td><td>outbox marked</td><td><code>{&#39;process_instance_id&#39;: &#39;972966e9-5887-44c4-ac1d-de41290a52bb&#39;, &#39;completion_id&#39;: &#39;payment.completed:evt-1001&#39;, &#39;role&#39;: &#39;publisher&#39;}</code></td></tr><tr><td>2026-11-12 10:01:27.080175+00:00</td><td>runner</td><td>worker restarted</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;972966e9-5887-44c4-ac1d-de41290a52bb&#39;}</code></td></tr><tr><td>2026-11-12 10:01:27.144961+00:00</td><td>runner</td><td>progress observed</td><td><code>{&#39;committed_offset&#39;: 1}</code></td></tr><tr><td>2026-11-12 10:01:27.186945+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;consumer&#39;, &#39;process_instance_id&#39;: &#39;e2db271d-5702-4208-890f-ce4499cdd929&#39;}</code></td></tr><tr><td>2026-11-12 10:01:27.246425+00:00</td><td>runner</td><td>worker paused</td><td><code>{&#39;role&#39;: &#39;publisher&#39;, &#39;process_instance_id&#39;: &#39;972966e9-5887-44c4-ac1d-de41290a52bb&#39;}</code></td></tr><tr><td>2026-11-12 10:01:27.327496+00:00</td><td>runner</td><td>snapshot collected</td><td><code>{&#39;payments&#39;: 1, &#39;output_records&#39;: 2}</code></td></tr>
+        </tbody></table></div>
+      </details>
+      <p><a href="candidate/crash_after_publish_ack/containers.log">logs</a> · <a href="candidate/crash_after_publish_ack/evidence.json">evidence</a> · <a href="candidate/crash_after_publish_ack/environment.json">environment</a></p>
+    </details>
+
+</section>
+
+<footer><p class="meta">The final report.json is the authoritative result. Runner observations and application log entries are shown separately.</p></footer>
+</body>
+</html>
